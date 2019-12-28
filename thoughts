@@ -1,0 +1,20 @@
+Q-learning: 
+
+Problem
+    Det finns jättemånga (typ 10^17 minst) states
+    Jag kan inte i förväg säga hur många
+
+Tankar om lösningar: 
+    För att lista ut vilken reward som behövs för vilket move kanske
+    jag kan enbart titta på högen jag tar från och högen jag lägger
+    på. Då blir det mycket färre möjligheter. 
+    Ge reward för att lägga en av samma färg på en annan.
+    Ge mer reward för att få kort blir färre - prioritera att få bort högar
+
+
+    När ska man distribuera?
+    När läget inte kan förbättras? i.e, när alla qvärden som finns är sämmre än det man följde för att komma dit?
+    Men det kanske händer lite för ofta
+    När alla q värden är lägre än något annat q värde?
+
+
