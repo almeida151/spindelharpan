@@ -1,5 +1,6 @@
 from QPlayer import QPlayer
 from SpindelTable import Table
+import json
 
 
 
@@ -29,7 +30,11 @@ for i in range(N):
                 #break
 
             # Print every something
-            if not n % 2000:
+            if not n % 10000:
+                jsonDump = json.dumps(qPlayer.Q)
+                f = open("Q.json","w")
+                f.write(jsonDump)
+                f.close()
                 print(n)
 
             possMoves = table.possibleMoves()
@@ -38,6 +43,8 @@ for i in range(N):
 
             #breakpoint()
             qPlayer.move()
+            #input("Press Enter to continue...")
+            #print(table)
 
         if table.piles:
             table.distribute()
