@@ -25,12 +25,11 @@ for i in range(N):
 
             # Prevent going back and forth
             n += 1
-            if n > 1000 and not lastPile:
-                pass
-                #break
+            if n > 10000 and not lastPile:
+                break
 
             # Print every something
-            if not n % 10000:
+            if not n % 1000:
                 jsonDump = json.dumps(qPlayer.Q)
                 f = open("Q.json","w")
                 f.write(jsonDump)

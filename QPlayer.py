@@ -46,8 +46,13 @@ class QPlayer:
         m = move[2] if len(move) == 3 else 1
         h1 = len(self.table.stacks[move[0]].faceDownCards)
         h2 = len(self.table.stacks[move[1]].faceDownCards)
-        s = self.table.stacks[move[0]].faceUpCards[-1].suit == \
+
+        # The move to stack could be empty
+        if self.table.stacks[move[1]].faceUpCards:
+            s = self.table.stacks[move[0]].faceUpCards[-1].suit == \
                 self.table.stacks[move[1]].faceUpCards[-1].suit
+        else:
+            s = False
 
         arrFrom = []
         counter = 0
@@ -123,6 +128,7 @@ class QPlayer:
         for i in range(len(shiftedQValues)):
             if next(cumsumQValues) >= r:
                 moveIndex = i
+                break
 
         # Save the reward, for use later, when updating the Q matrix
         reward = self.reward(possMoves[moveIndex])
