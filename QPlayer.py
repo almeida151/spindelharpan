@@ -31,6 +31,7 @@ class QPlayer:
     def reward(self, move):
         # Reward 100 if move results in a stack of king to ace
         # Reward 1 if move results in flip of hidden card
+        # Punish -1 for placing a card on an empty stack
         reward = 0
 
         if len(move) == 2:
@@ -42,8 +43,12 @@ class QPlayer:
                 reward += 100
 
         # If move results in a card flipped
-        elif len(self.table.stacks[move[0]].faceUpCards) == move[2]:
+        if len(self.table.stacks[move[0]].faceUpCards) == move[2]:
             reward += 1
+
+        # If move moves to an empty stack
+        if len(self.table.stacks[move[1]].faceUpCards) == 0:
+            reward -= 1
 
         return reward
 
