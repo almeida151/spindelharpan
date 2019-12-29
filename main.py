@@ -6,8 +6,8 @@ import json
 
 # Run 100 games 
 wonGames = 0
-N = 10
-qPlayer = QPlayer(None, loadFromFile = True)
+N = 100
+qPlayer = QPlayer(None, loadFromFile = False)
 
 for i in range(N):
     print("Game: " + str(i))
@@ -27,7 +27,7 @@ for i in range(N):
             n += 1
             if n > 1000 and not lastPile:
                 break
-            if n > 5000 and lastPile:
+            if n > 10000 and lastPile:
                 break
 
             # Print every something
@@ -36,7 +36,7 @@ for i in range(N):
                 f = open("Q.json","w")
                 f.write(jsonDump)
                 f.close()
-                print(n)
+                #print(n)
 
             possMoves = table.possibleMoves()
             if not possMoves:
@@ -44,6 +44,9 @@ for i in range(N):
 
             qPlayer.move()
             #input("Press Enter to continue...")
+
+            if table.isWon():
+                break
 
         if table.piles:
             table.distribute()
