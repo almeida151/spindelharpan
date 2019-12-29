@@ -42,10 +42,8 @@ for i in range(N):
             if not possMoves:
                 break
 
-            breakpoint()
             qPlayer.move()
             #input("Press Enter to continue...")
-            print(table)
 
         if table.piles:
             table.distribute()
