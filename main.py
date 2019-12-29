@@ -6,7 +6,7 @@ import json
 
 # Run 100 games 
 wonGames = 0
-N = 1
+N = 100
 qPlayer = QPlayer(None)
 
 for i in range(N):
@@ -25,7 +25,9 @@ for i in range(N):
 
             # Prevent going back and forth
             n += 1
-            if n > 10000 and not lastPile:
+            if n > 1000 and not lastPile:
+                break
+            if n > 5000 and lastPile:
                 break
 
             # Print every something
