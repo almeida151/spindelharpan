@@ -31,7 +31,7 @@ class QPlayer:
     def reward(self, move):
         # Reward 100 if move results in a stack of king to ace
         # Reward 1 if move results in flip of hidden card
-        # Punish -1 for placing a card on an empty stack
+        # Reward for creating empty stack unless moving to empty stack
         reward = 0
 
         if len(move) == 2:
@@ -42,13 +42,11 @@ class QPlayer:
                and self.table.stacks[move[1]].faceUpCards[-(13-move[2])].value == 13:
                 reward += 100
 
-        # If move results in a card flipped
+        # If move results in a card flipped or empty stack created
         if len(self.table.stacks[move[0]].faceUpCards) == move[2]:
-            reward += 1
-
-        # If move moves to an empty stack
-        if len(self.table.stacks[move[1]].faceUpCards) == 0:
-            reward -= 1
+            # If move is not to empty stack
+            if self.table.stacks[move[1]].faceUpCards:
+                reward += 1
 
         return reward
 
@@ -82,7 +80,8 @@ class QPlayer:
             prevCard = card
 
         # Append the last sequence
-        arrFrom.append(counter)
+        if counter:
+            arrFrom.append(counter)
 
         arrTo = []
         counter = 0
@@ -99,7 +98,8 @@ class QPlayer:
             prevCard = card
 
         # Append the last sequence
-        arrTo.append(counter)
+        if counter:
+            arrTo.append(counter)
 
         qKey = [n,m,s,h1,h2,arrFrom,arrTo]
         return str(qKey)
