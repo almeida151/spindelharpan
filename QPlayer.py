@@ -9,6 +9,8 @@ class QPlayer:
     learningRate = 0.1
     # Kind of decides how much to value future rewards in comparison to present ones
     discount = 0.95 
+    # What are the chances to randomize movement
+    gambleChance = 1
 
     def __init__(self, t, _Q = None, loadFromFile = False):
         # Initialize Q matrix as empty dictionary
@@ -119,27 +121,36 @@ class QPlayer:
         # If there is none, get 0
         qValues = [self.Q[qKey] if qKey in self.Q else 0 for qKey in qKeys]
 
-        # Choose a move weighted with the q values
-
-        try:
-            minPosQValue = min([qValue for qValue in qValues if qValue > 0])
-        except ValueError:
-            # No nonzero qValues
-            minPosQValue = 1
-
-        # Add min positive value over 2 to all values to give those with 0 qvalue a chance
-        shiftedQValues = [qValue + minPosQValue/2.0 for qValue in qValues]
-        # Normalize
-        sumQValues = sum(shiftedQValues)
-        shiftedQValues = [shiftedQValue/sumQValues for shiftedQValue in shiftedQValues]
 
         # Select a move
-        r = random.random()
-        cumsumQValues = itertools.accumulate(shiftedQValues)
-        for i in range(len(shiftedQValues)):
-            if next(cumsumQValues) >= r:
-                moveIndex = i
-                break
+
+        # should we gamble?
+        gamble = random.random() < self.gambleChance
+        
+        # Choose a move weighted with the q values
+        if gamble:
+            try:
+                minPosQValue = min([qValue for qValue in qValues if qValue > 0])
+            except ValueError:
+                # No nonzero qValues
+                minPosQValue = 1
+
+            # Add min positive value / 2 to all values to give those with 0 qvalue a chance
+            shiftedQValues = [qValue + minPosQValue/2.0 for qValue in qValues]
+            # Normalize
+            sumQValues = sum(shiftedQValues)
+            shiftedQValues = [shiftedQValue/sumQValues for shiftedQValue in shiftedQValues]
+
+            r = random.random()
+            cumsumQValues = itertools.accumulate(shiftedQValues)
+            for i in range(len(shiftedQValues)):
+                if next(cumsumQValues) >= r:
+                    moveIndex = i
+                    break
+        else:
+            # Just choose the maximum
+            f = lambda i: qValues[i]
+            moveIndex = max(range(len(qValues)), key=f)
 
         # Save the reward, for use later, when updating the Q matrix
         reward = self.reward(possMoves[moveIndex])

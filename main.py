@@ -1,19 +1,23 @@
 from QPlayer import QPlayer
 from SpindelTable import Table
 import json
+import itertools
+import matplotlib.pyplot as plt
 
 
 
 # Run 100 games 
 wonGames = 0
-N = 100
+N = 1000
 qPlayer = QPlayer(None, loadFromFile = False)
+won = []
 
 for i in range(N):
     print("Game: " + str(i))
 
     table = Table(1)
     qPlayer.newTable(table)
+    qPlayer.gambleChance -= 1/N
     lastPile = False
 
     # Game loop
@@ -59,13 +63,17 @@ for i in range(N):
 
     if table.isWon():
         wonGames += 1
-        print("WON")
+        print("WON ({wonGames} of {i})")
+        won.append(1)
     else:
         print("lost")
+        won.append(0)
 
 print(f"Number of won games: {wonGames} out of {N}")
-
-
+cumsum = list(itertools.accumulate(won))
+plt.plot(cumsum)
+plt.show()
+plt.savefig("out.png")
 
 
 
