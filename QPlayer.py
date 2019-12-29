@@ -1,5 +1,6 @@
 import random
 import itertools
+import json
 
 class QPlayer:
 
@@ -9,7 +10,7 @@ class QPlayer:
     # Kind of decides how much to value future rewards in comparison to present ones
     discount = 0.95 
 
-    def __init__(self, t, _Q = None):
+    def __init__(self, t, _Q = None, loadFromFile = False):
         # Initialize Q matrix as empty dictionary
         # Q keys are [n,m,s,h1,h2,[2,5,2,1],[3,2,2]]
         # 
@@ -19,7 +20,12 @@ class QPlayer:
         # h1, h2 - number of hidden cards in from and to
         # arrays - number of connected cards in from and to
         #           i.e. K,Q,J,3,5,4 would get [3,1,2] (if all in same suit)
-        self.Q = {} if _Q is None else _Q
+        if not loadFromFile:
+            self.Q = {} if _Q is None else _Q
+        else:
+            with open("Q.json") as f:
+                self.Q = json.load(f)
+
         self.table = t
 
     def reward(self, move):
