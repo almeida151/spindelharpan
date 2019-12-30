@@ -126,7 +126,7 @@ class QPlayer:
 
         # should we gamble?
         gamble = random.random() < self.gambleChance
-        
+
         # Choose a move weighted with the q values
         if gamble:
             try:
@@ -156,10 +156,11 @@ class QPlayer:
         reward = self.reward(possMoves[moveIndex])
 
         # Move the move
-        self.table.move(*possMoves[moveIndex])
+        move = possMoves[moveIndex]
+        self.table.move(*move)
         movedQKey = qKeys[moveIndex]
 
-        # Update the Q matrix
+        # Find the qValues of the newly available moves
         possMoves = self.table.possibleMoves()
         qKeys = [self.moveToQKey(move) for move in possMoves]
         qValues = [self.Q[qKey] if qKey in self.Q else 0 for qKey in qKeys]
@@ -167,10 +168,34 @@ class QPlayer:
         if not(movedQKey in self.Q):
             self.Q[movedQKey] = 0
 
+        # If there are now no available moves, distribute
+        if not possMoves:
+            if self.table.timesDistributed == 5:
+                return -1
+
+            self.table.distribute()
+
+        # If the best move now is to revert the previous move
+        # And reverting has a lower q-value than going forward, distribute instead
+        f = lambda i: qValues[i]
+        bestMoveIndex = max(range(len(qValues)), key=f)
+        if possMoves and \
+           move[0] == possMoves[bestMoveIndex][1] and \
+           move[1] == possMoves[bestMoveIndex][0] and \
+           move[2] == possMoves[bestMoveIndex][2] and \
+           self.Q[movedQKey] >= qValues[bestMoveIndex] \
+           and qValues[bestMoveIndex] != 0:
+
+            if self.table.timesDistributed == 5:
+                return -1
+            self.table.distribute()
+
+
+        # Update the Q matrix
         self.Q[movedQKey] += self.learningRate * (reward + self.discount*max(qValues+[0]) - self.Q[movedQKey])
 
 
-        return
+        return 0
 
     def newTable(self, t):
         self.table = t
