@@ -175,20 +175,22 @@ class QPlayer:
 
             self.table.distribute()
 
+        """
         # If the best move now is to revert the previous move
         # And reverting has a lower q-value than going forward, distribute instead
-        f = lambda i: qValues[i]
-        bestMoveIndex = max(range(len(qValues)), key=f)
-        if possMoves and \
-           move[0] == possMoves[bestMoveIndex][1] and \
-           move[1] == possMoves[bestMoveIndex][0] and \
-           move[2] == possMoves[bestMoveIndex][2] and \
-           self.Q[movedQKey] >= qValues[bestMoveIndex] \
-           and qValues[bestMoveIndex] != 0:
+        if possMoves:
+            f = lambda i: qValues[i]
+            bestMoveIndex = max(range(len(qValues)), key=f)
+            if move[0] == possMoves[bestMoveIndex][1] and \
+               move[1] == possMoves[bestMoveIndex][0] and \
+               move[2] == possMoves[bestMoveIndex][2] and \
+               self.Q[movedQKey] >= qValues[bestMoveIndex] \
+               and qValues[bestMoveIndex] != 0:
 
-            if self.table.timesDistributed == 5:
-                return -1
-            self.table.distribute()
+                if self.table.timesDistributed == 5:
+                    return -1
+                self.table.distribute()
+        """
 
 
         # Update the Q matrix
