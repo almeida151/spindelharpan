@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 # Run 100 games 
 wonGames = 0
-N = 1000
+N = 100
 qPlayer = QPlayer(None, loadFromFile = False)
 won = []
 
@@ -63,10 +63,10 @@ for i in range(N):
 
     if table.isWon():
         wonGames += 1
-        print("WON ({wonGames} of {i})")
+        print(f"            WON ({wonGames} of {i})")
         won.append(1)
     else:
-        print("lost")
+        print(f"             lost(won {wonGames} of {i})")
         won.append(0)
 
 print(f"Number of won games: {wonGames} out of {N}")
