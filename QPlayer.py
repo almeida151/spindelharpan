@@ -53,17 +53,18 @@ class QPlayer:
         return reward
 
     def moveToQKey(self, move):
-        n = self.table.timesDistributed
-        m = move[2] if len(move) == 3 else 1
-        h1 = len(self.table.stacks[move[0]].faceDownCards)
-        h2 = len(self.table.stacks[move[1]].faceDownCards)
+        #n = self.table.timesDistributed
+        #m = move[2] if len(move) == 3 else 1
+        moving_max_no = move[2] == self.table.stacks[move[0]].numberOfMovable()
+        h1 = bool(len(self.table.stacks[move[0]].faceDownCards))
+        h2 = bool(len(self.table.stacks[move[1]].faceDownCards))
 
         # The move to stack could be empty
         if self.table.stacks[move[1]].faceUpCards:
-            s = self.table.stacks[move[0]].faceUpCards[-1].suit == \
-                self.table.stacks[move[1]].faceUpCards[-1].suit
+            suitMatch = self.table.stacks[move[0]].faceUpCards[-1].suit == \
+                        self.table.stacks[move[1]].faceUpCards[-1].suit
         else:
-            s = False
+            suitMatch = False
 
         arrFrom = []
         counter = 0
@@ -103,7 +104,7 @@ class QPlayer:
         if counter:
             arrTo.append(counter)
 
-        qKey = [n,m,s,h1,h2,arrFrom,arrTo]
+        qKey = [moving_max_no,suitMatch,h1,h2,arrFrom,arrTo]
         return str(qKey)
 
     def move(self):
