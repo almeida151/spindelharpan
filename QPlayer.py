@@ -107,7 +107,7 @@ class QPlayer:
         return str(qKey)
 
     def move(self):
-        # Makes a move, cannot be distribute
+       # Makes a move, cannot be distribute
 
         possMoves = self.table.possibleMoves()
 
@@ -127,26 +127,9 @@ class QPlayer:
         # should we gamble?
         gamble = random.random() < self.gambleChance
 
-        # Choose a move weighted with the q values
+        # Choose a completely random move
         if gamble:
-            try:
-                minPosQValue = min([qValue for qValue in qValues if qValue > 0])
-            except ValueError:
-                # No nonzero qValues
-                minPosQValue = 1
-
-            # Add min positive value / 2 to all values to give those with 0 qvalue a chance
-            shiftedQValues = [qValue + minPosQValue/2.0 for qValue in qValues]
-            # Normalize
-            sumQValues = sum(shiftedQValues)
-            shiftedQValues = [shiftedQValue/sumQValues for shiftedQValue in shiftedQValues]
-
-            r = random.random()
-            cumsumQValues = itertools.accumulate(shiftedQValues)
-            for i in range(len(shiftedQValues)):
-                if next(cumsumQValues) >= r:
-                    moveIndex = i
-                    break
+            moveIndex = random.randint(0,len(qValues)-1)
         else:
             # Just choose the maximum
             f = lambda i: qValues[i]
