@@ -11,8 +11,9 @@ import random
 # Run 100 games 
 wonGames = 0
 N = 1000
-qPlayer = QPlayer(None, loadFromFile = False)
-qPlayer.gambleChance = 0.5
+qPlayer = QPlayer(None, loadFromFile = True)
+qPlayer.gambleChance = 0.3
+
 won = []
 
 for i in range(N):
@@ -22,10 +23,9 @@ for i in range(N):
     deck = generateDeck(True, 'quarter-one-color')
     for randStackNo in (random.randint(0,9) for i in range(13)):
         table.stacks[randStackNo].faceUpCards.append(deck.pop())
-    print(table)
 
     qPlayer.newTable(table)
-    #qPlayer.gambleChance -= 1/N
+    qPlayer.gambleChance -= 0.3/N
     lastPile = False
 
     # Game loop
@@ -35,9 +35,9 @@ for i in range(N):
         n = 0
         while True:
 
-            # Prevent going back and forth
+            # Prevent going too many moves
             n += 1
-            if n > 1000:
+            if n > 200:
                 break
 
             # Print every something
