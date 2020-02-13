@@ -24,6 +24,9 @@ def generateDeck(randomDeck = True, deckType = 'normal'):
             for valueIter in range(1,14):
                 cardList.append(Card(valueIter, suitIter))
                 cardList.append(Card(valueIter, suitIter))
+    if (deckType == 'quarter-one-color'):
+        for valueIter in range(1,14):
+            cardList.append(Card(valueIter, 0))
 
     if randomDeck:
         random.shuffle(cardList)

@@ -1,4 +1,4 @@
-import Deck 
+import Deck
 import random
 
 class CardStack:
@@ -19,7 +19,6 @@ class CardStack:
 
         if self.faceDownCards:
             self.faceUpCards.append(self.faceDownCards.pop())
-
 
     def popTop(self):
         # Removes and returns the top card of the face up pile
@@ -73,22 +72,28 @@ class Table:
 
     def __init__(self, noOfColors):
 
+        self.piles = []
+        self.timesDistributed = 0
+        self.stacks = []
+
         if noOfColors == 1:
             deck = Deck.generateDeck(deckType='double-one-color')
         elif noOfColors == 2:
             deck = Deck.generateDeck(deckType='double-two-color')
         elif noOfColors == 4:
             deck = Deck.generateDeck(deckType='double')
+        elif noOfColors == -1:
+            for i in range(10):
+                cardStack = CardStack()
+                self.stacks.append(cardStack)
+            return
         else:
             print(str(noOfColors) + 'is not a valid color')
 
-        self.timesDistributed = 0
-        self.piles = []
         for i in range(5):
             self.piles.append(deck[-10:])
             del deck[-10:]
 
-        self.stacks = []
         for i in range(10):
             cardStack = CardStack()
             if i < 4:
