@@ -48,7 +48,8 @@ class QPlayer:
         if len(self.table.stacks[move[0]].faceUpCards) == move[2]:
             # If move is not to empty stack
             if self.table.stacks[move[1]].faceUpCards:
-                reward += 1
+                #reward += 1
+                pass
 
         return reward
 

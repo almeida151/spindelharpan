@@ -37,7 +37,7 @@ for i in range(N):
 
             # Prevent going too many moves
             n += 1
-            if n > 200:
+            if n > 100:
                 break
 
             # Print every something
