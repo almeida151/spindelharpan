@@ -8,11 +8,12 @@ class QPlayer:
     # not too low or you'll never get there
     learningRate = 0.1
     # Kind of decides how much to value future rewards in comparison to present ones
-    discount = 0.95 
+    discount = 0.9 
     # What are the chances to randomize movement
     gambleChance = 1
 
-    def __init__(self, t, _Q = None, loadFromFile = False):
+    def __init__(self, t, _Q = None, loadFromFile = False,
+                    rewardEmpty = True, punishMove = False):
         # Initialize Q matrix as empty dictionary
         # Q keys are [n,m,s,h1,h2,[2,5,2,1],[3,2,2]]
         # 
@@ -22,6 +23,9 @@ class QPlayer:
         # h1, h2 - number of hidden cards in from and to
         # arrays - number of connected cards in from and to
         #           i.e. K,Q,J,3,5,4 would get [3,1,2] (if all in same suit)
+        self.rewardEmpty = rewardEmpty
+        self.punishMove = punishMove
+
         if not loadFromFile:
             self.Q = {} if _Q is None else _Q
         else:
@@ -45,11 +49,14 @@ class QPlayer:
                 reward += 100
 
         # If move results in a card flipped or empty stack created
-        if len(self.table.stacks[move[0]].faceUpCards) == move[2]:
-            # If move is not to empty stack
-            if self.table.stacks[move[1]].faceUpCards:
-                #reward += 1
-                pass
+        if self.rewardEmpty:
+            if len(self.table.stacks[move[0]].faceUpCards) == move[2]:
+                # If move is not to empty stack
+                if self.table.stacks[move[1]].faceUpCards:
+                    reward += 1
+
+        if self.punishMove:
+            reward -= 0.05
 
         return reward
 
@@ -159,6 +166,15 @@ class QPlayer:
                 return -1
 
             self.table.distribute()
+
+        # If the move with the highest q-value
+        # Has a negative Q-value, distribute
+        elif max(qValues) < 0:
+            if self.table.timesDistributed != 5:
+                return -1
+
+            self.table.distribute()
+
 
         """
         # If the best move now is to revert the previous move
